@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../model/user';
 import { HttpService } from '../services/http.service';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '../utils/models/user.interface';
 
 @Component({
   selector: 'app-user',
@@ -10,25 +10,26 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserComponent implements OnInit {
 
-  table: string = "user";
-  users!: User[];
-  currentUser = new User();
+  table: string = "users";
+  users: User[] = [];
+  currentUser!: User;
   currentIndex: number = 0;
 
   constructor ( private httpService: HttpService,
                 private route: ActivatedRoute ) {}
 
   ngOnInit(): void {
+    let currentId = this.route.snapshot.paramMap.get('id');
+    console.log(currentId);
+
+    (currentId != null) ? this.currentUser.id = parseInt(currentId) : this.currentUser.id = 0;
+
+    if(this.currentUser.id == 0){
+      this.getUsers(this.table, this.currentUser.id);
+    }else{
+      this.getUserById(this.table, this.currentUser.id)
+    }
   
-    // let currentId = this.route.snapshot.paramMap.get('id');
-  // console.log(currentId);
-
-    // (currentId != null) ? this.currentUser.id = parseInt(currentId) : this.currentUser.id = 0;
-    
-      // this.getUsers(this.table, this.currentUser.id);
-
-
-
 
   }
 
@@ -37,6 +38,15 @@ export class UserComponent implements OnInit {
       next: (response: User[]) => this.users=response,
       error: (err: Error)=> console.log("Error"),
       complete: ()=> console.log("completed")
+    })
+  }
+
+  getUserById(table:string, id:number){
+    this.httpService.getUserById(table, id).subscribe({
+      next:(response:User)=> this.currentUser = response,
+      error: (err:Error)=>console.log("Error userbyId"),
+      complete: ()=> console.log(this.currentUser.name)
+      
     })
   }
 

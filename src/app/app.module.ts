@@ -13,6 +13,7 @@ import { ProjectComponent } from './project/project.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { ConnectionComponent } from './connection/connection.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
     UserComponent,
     LoginComponent,
     ProjectComponent,
+    ConnectionComponent,
   ],
   imports: [
     BrowserModule,

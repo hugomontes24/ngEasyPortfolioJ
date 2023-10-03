@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { LoginViewModel } from './../model/login-view-model';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
-import { User } from 'src/app/model/user';
-
-
+import { User } from '../utils/models/user.interface';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +10,6 @@ import { User } from 'src/app/model/user';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
   loginViewModel: LoginViewModel = new LoginViewModel();
   loginError: string = "";
 

@@ -1,12 +1,23 @@
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "src/environments/environment";
+import { PortfolioDTO } from "../model/portfolio/portfolioDTO.interface";
 
 @Injectable()
 
 export class PortfolioService {
+    ENV_DEV:string = environment.apiUrl;
 
     constructor ( private http: HttpClient ) {}
+
+
+    // get by id
+    public getPortfolioById(table:string, id:number): Observable<PortfolioDTO>{
+        return this.http.get<PortfolioDTO>(`${this.ENV_DEV}/${table}/${id}`, {responseType: "json"});
+    }
+
+    
 
     getData( table: string, id: number ): Observable<any> {
         // let currentUser = {token: ""};

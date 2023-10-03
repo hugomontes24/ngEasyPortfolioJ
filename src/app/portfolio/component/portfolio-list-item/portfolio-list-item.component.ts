@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Portfolio} from '../../model/portfolio.model';
+import { Portfolio} from '../../model/portfolio/portfolio.interface';
 import { ActivatedRoute } from '@angular/router';
-import { HttpService } from 'src/app/services/http.service';
-import { User } from 'src/app/model/user';
+
 import { Observable } from 'rxjs';
-import { Skill } from '../../model/skill.model';
+import { Skill } from '../../model/skill.interface';
+import { User } from 'src/app/utils/models/user.interface';
+import { PortfolioService } from '../../services/portfolio.service';
 
 @Component({
   selector: 'app-portfolio-list-item',
@@ -12,39 +13,46 @@ import { Skill } from '../../model/skill.model';
   styleUrls: ['./portfolio-list-item.component.scss']
 })
 export class PortfolioListItemComponent implements OnInit {
-  table: string = 'portfolio';
+  table: string = 'portfolios';
   id: number|any;
-  currentUser: User = new User();
-  portfolio: Portfolio = new Portfolio;
+  currentUser!: User;
+  portfolio!: Portfolio;
   skills!: Skill[];
 
 
   constructor(
       private route: ActivatedRoute,
-      private http: HttpService
+      private portfolioService: PortfolioService
     ){};
 
   
   ngOnInit(): void {
-    
     let anything: any = sessionStorage.getItem("currentUser");
     // je dois passer par une variable intermediaire pour pouvoir recup currentUser
-    if( anything != null){
-      this.currentUser = JSON.parse(anything);
-      this.id = this.route.snapshot.paramMap.get('id');
+    // if( anything != null){
+    //   this.currentUser = JSON.parse(anything);
+    //   this.id = this.route.snapshot.paramMap.get('id');
   
-      if(this.id != null){
-        this.http.getById(this.table, this.currentUser.id, this.id)
-        .subscribe({
-          next:(response:Portfolio)=>{ this.portfolio = response},
-          error:(err:Error)=>{console.log(err);
-          },
-          complete:()=>{}
-        })
-      }
-    }
+    //   if(this.id != null){
+    //     this.http.getById(this.table, this.currentUser.id, this.id)
+    //     .subscribe({
+    //       next:(response:Portfolio)=>{ this.portfolio = response},
+    //       error:(err:Error)=>{console.log(err);
+    //       },
+    //       complete:()=>{}
+    //     })
+    //   }
+    // }
+    this.getPortfolioById(this.table, 1);
+  }
 
-
+  getPortfolioById(table:string, id:number){
+    this.portfolioService.getPortfolioById(table, id)
+    .subscribe({
+      next:(response:Portfolio)=> this.portfolio = response,
+      error: (err:Error)=>console.log("Error portfolioById"),
+      complete: ()=> console.log(this.portfolio.title)
+    })
   }
 
   onEditClick(event: any) {

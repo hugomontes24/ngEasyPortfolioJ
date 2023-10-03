@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Portfolio } from '../../model/portfolio.model';
-import { User } from 'src/app/model/user';
+import { Portfolio } from '../../model/portfolio/portfolio.interface';
 import { PortfolioService } from '../../services/portfolio.service';
 import { ActivatedRoute } from '@angular/router';
+import { User } from 'src/app/utils/models/user.interface';
 
 @Component({
   selector: 'app-portfolio-list',
@@ -11,21 +11,27 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PortfolioListComponent {
 
-  table: string = "portfolio";
+  table: string = "portfolioS";
   portfolios!: Portfolio[];
-  currentUser: User = new User();
+  currentUser: User =  {
+                id: 0,
+                name: "",
+                firstname: "",
+                email: "",
+                password: ""
+              };
 
   constructor( private portfolioService: PortfolioService,
               private route: ActivatedRoute)// *** a enlever + tard ***
               {}
 
   ngOnInit(): void {
-    let anything: any = sessionStorage.getItem("currentUser");
-    // je dois passer par une variable intermediaire pour pouvoir recup currentUser
-    if( anything != null){
-      this.currentUser = JSON.parse(anything);
-      this.getPortfolios(this.table, this.currentUser.id);
-    }
+    // let anything: any = sessionStorage.getItem("currentUser");
+    // // je dois passer par une variable intermediaire pour pouvoir recup currentUser
+    // if( anything != null){
+    //   this.currentUser = JSON.parse(anything);
+    //   this.getPortfolios(this.table, this.currentUser.id);
+    // }
 
   }
 
@@ -33,8 +39,8 @@ export class PortfolioListComponent {
     this.portfolioService.getAll(table, userId).subscribe({
       next: (response: Portfolio[]) => { this.portfolios=response },
       error: (err: Error)=> {
-        alert: ("Authentication failed, error getting portfolios")
-      },
+              alert("Authentication failed, error getting portfolios")
+            },
       complete: ()=> console.log(this.portfolios)
     })
   }

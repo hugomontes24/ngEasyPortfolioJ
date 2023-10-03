@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginViewModel } from '../model/login-view-model';
 import { Observable, map } from 'rxjs';
-import { User } from 'src/app/model/user';
+import { User } from '../utils/models/user.interface';
 
 @Injectable({
   providedIn: 'root'
